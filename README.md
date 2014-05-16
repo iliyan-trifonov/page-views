@@ -12,6 +12,7 @@ Enough to make conclusions or just check if the site's working.
 ## Tech stuff
 This script uses PHP and Memcached to store the number of page views on the current domain using the HTTP_HOST variable
 as a key and only increasing the page views value. Memcached CAS() is used for atomicity.
+No personal information is taken from the visitor at all, it's just your domain keeping how many times its pages are opened.
 
 ## How to use it?
 You edit the config/config.php file, probably just changing the memcached server address if it's not running
