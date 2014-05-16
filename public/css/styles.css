@@ -1,0 +1,19 @@
+* {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+th {
+    text-align: center;
+}
+
+.th {
+    width: 200px;
+}
+
+.td_left {
+    text-align: left;
+}
+
+.td_center {
+    text-align: center;
+}
