@@ -45,13 +45,15 @@ class PageViews
             $this->addDebug("memcached extension found!");
             $this->memcached = new \Memcached();
             $result = $this->memcached->addServer($this->memcachedHost, $this->memcachedPort);
-            if (!$result) {
+            $statuses = $this->memcached->getStats();
+            if ($result && isset($statuses[$this->memcachedHost.":".$this->memcachedPort])) {
+                $this->addDebug("memcached server added successfully");
+            } else {
                 $this->memcached = null;
                 $msg = "memcached server connect error!";
                 $this->addDebug($msg);
                 $this->setError($msg);
             }
-            $this->addDebug("memcached server added successfully");
             return $result;
         } else {
             $msg = "No memcached extension found!";
