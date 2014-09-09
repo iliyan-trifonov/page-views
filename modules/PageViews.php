@@ -123,14 +123,19 @@ class PageViews
     {
         $result = $this->getCache($this->pageviewsMemCKey);
         if (!$result) {
+            $this->addDebug("getPageViews($site): result is false!");
             $result = array();
             if ($site) {
+                $this->addDebug("getPageViews($site): returning 0 page views");
                 return 0;
             }
         } elseif ($site) {
+            $this->addDebug("getPageViews($site): cache found!");
             if (isset($result[$site])) {
+                $this->addDebug("getPageViews($site): returning {$result[$site]} page views");
                 return $result[$site];
             } else {
+                $this->addDebug("getPageViews($site): result[$site] not set! Returning 0 page views");
                 return 0;
             }
         }
