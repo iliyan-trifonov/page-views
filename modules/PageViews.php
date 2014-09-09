@@ -3,8 +3,6 @@
 
 namespace ITrifonov;
 
-require_once __DIR__ . '/../config/config.php';
-
 class PageViews
 {
 
@@ -17,9 +15,9 @@ class PageViews
     protected $allowDebug = false;
     protected $debugMessages = array();
 
-    public function __construct($memcached = null, $debug = null)
+    public function __construct($config = array(), $memcached = null, $debug = null)
     {
-        $this->setConfig();
+        $this->setConfig($config);
         if (!is_null($debug) && is_bool($debug)) {
             $this->setDebug($debug);
         }
@@ -174,23 +172,23 @@ class PageViews
         return $result;
     }
 
-    protected function setConfig()
+    protected function setConfig($config = array())
     {
-        if (isset($GLOBALS['ITrifonov']['PageViews']['config']) && !empty($GLOBALS['ITrifonov']['PageViews']['config'])) {
-            if (isset($GLOBALS['ITrifonov']['PageViews']['config']['memcachedHost'])) {
-                $this->memcachedHost = $GLOBALS['ITrifonov']['PageViews']['config']['memcachedHost'];
+        if (isset($config) && !empty($config)) {
+            if (isset($config['memcachedHost'])) {
+                $this->memcachedHost = $config['memcachedHost'];
             }
-            if (isset($GLOBALS['ITrifonov']['PageViews']['config']['memcachedPort'])) {
-                $this->memcachedPort = $GLOBALS['ITrifonov']['PageViews']['config']['memcachedPort'];
+            if (isset($config['memcachedPort'])) {
+                $this->memcachedPort = $config['memcachedPort'];
             }
-            if (isset($GLOBALS['ITrifonov']['PageViews']['config']['pageviewsMemCKey'])) {
-                $this->pageviewsMemCKey = $GLOBALS['ITrifonov']['PageViews']['config']['pageviewsMemCKey'];
+            if (isset($config['pageviewsMemCKey'])) {
+                $this->pageviewsMemCKey = $config['pageviewsMemCKey'];
             }
-            if (isset($GLOBALS['ITrifonov']['PageViews']['config']['pageviewsCacheTime'])) {
-                $this->pageviewsCacheTime = $GLOBALS['ITrifonov']['PageViews']['config']['pageviewsCacheTime'];
+            if (isset($config['pageviewsCacheTime'])) {
+                $this->pageviewsCacheTime = $config['pageviewsCacheTime'];
             }
-            if (isset($GLOBALS['ITrifonov']['PageViews']['config']['allowDebug'])) {
-                $this->allowDebug = $GLOBALS['ITrifonov']['PageViews']['config']['allowDebug'];
+            if (isset($config['allowDebug'])) {
+                $this->allowDebug = $config['allowDebug'];
             }
         }
     }

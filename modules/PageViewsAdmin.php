@@ -10,9 +10,9 @@ class PageViewsAdmin extends PageViews
     protected $sites = null;
     protected $ajax = false;
 
-    public function __construct($ajax = false)
+    public function __construct($config = array(), $ajax = false)
     {
-        parent::__construct();
+        parent::__construct($config);
         $this->ajax = $ajax;
         $this->sites = $this->getPageViews($ajax);
     }

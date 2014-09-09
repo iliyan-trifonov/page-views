@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS['ITrifonov']['PageViews']['config'] = array(
+$pageViewsConfig = array(
     'memcachedHost' => '127.0.0.1',
     'memcachedPort' => '11211',
     'pageviewsMemCKey' => 'pageviews_stats',
