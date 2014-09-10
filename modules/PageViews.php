@@ -61,16 +61,6 @@ class PageViews
         }
     }
 
-    protected function getCache($key = "")
-    {
-        if ($this->memcached) {
-            return $this->memcached->get($key);
-        } else {
-            $this->addDebug("getCache(): memcached not initialized!");
-            return false;
-        }
-    }
-
     protected function getCurrentHostName()
     {
         return $_SERVER['HTTP_HOST'];
@@ -111,17 +101,20 @@ class PageViews
                     . " counter: " . $counter
                 );
             }
-            $this->addDebug("addPageView() stats: result = $result, counter = $counter, last cas: $cas");
+            $this->addDebug("addPageView($site) success! stats: result = $result, counter = $counter, last cas: $cas");
             return $result;
         } else {
-            $this->setError("addPageView(): No memcached instance!");
+            $this->setError("addPageView($site): No memcached instance!");
             return false;
         }
     }
 
     public function getPageViews($site = "")
     {
-        $result = $this->getCache($this->pageviewsMemCKey);
+        $result = $this->memcached->get($this->pageviewsMemCKey);
+        ob_start();
+        var_dump($result);
+        $this->addDebug("getPageViews($site): result = " . ob_get_clean());
         if (!$result) {
             $this->addDebug("getPageViews($site): result is false!");
             $result = array();
@@ -130,7 +123,6 @@ class PageViews
                 return 0;
             }
         } elseif ($site) {
-            $this->addDebug("getPageViews($site): cache found!");
             if (isset($result[$site])) {
                 $this->addDebug("getPageViews($site): returning {$result[$site]} page views");
                 return $result[$site];
