@@ -1,6 +1,5 @@
 <?php
 
-
 namespace ITrifonov;
 
 class PageViews
@@ -12,51 +11,46 @@ class PageViews
     protected $pageviewsMemCKey = 'pageviews_stats';
     protected $pageviewsCacheTime = 86400;
     protected $error = "";
-    protected $allowDebug = false;
-    protected $debugMessages = array();
 
-    public function __construct($config = array(), $memcached = null, $debug = null)
+    public function __construct($config = [], $memcached = null)
     {
         $this->setConfig($config);
-        if (!is_null($debug) && is_bool($debug)) {
-            $this->setDebug($debug);
-        }
         if (!is_null($memcached)) {
-            $this->addDebug("used given memcached server");
             $this->memcached = $memcached;
         } else {
-            $this->addDebug("creating a memcached server connection");
             $result = $this->createMemcached();
             if (!$result) {
-                $msg = "createMemcached() error!";
-                $this->addDebug($msg);
-                $this->setError($msg);
+                $this->setError("createMemcached() error!");
+                return false;
             }
         }
         $this->pageviewsMemCKey .= '::' . date('Ymd');
         //$this->memcached->delete($this->pageviewsMemCKey); //cache cleanup
+        return true;
     }
 
     protected function createMemcached()
     {
         if (extension_loaded('memcached')) {
-            $this->addDebug("memcached extension found!");
             $this->memcached = new \Memcached();
-            $result = $this->memcached->addServer($this->memcachedHost, $this->memcachedPort);
+            $result = $this->memcached->addServer(
+                $this->memcachedHost,
+                $this->memcachedPort
+            );
             $statuses = $this->memcached->getStats();
-            if ($result && isset($statuses[$this->memcachedHost.":".$this->memcachedPort])) {
-                $this->addDebug("memcached server added successfully");
-            } else {
+            if (!$result
+                || !isset(
+                        $statuses[
+                            $this->memcachedHost.":".$this->memcachedPort
+                        ]
+                    )
+            ) {
                 $this->memcached = null;
-                $msg = "memcached server connect error!";
-                $this->addDebug($msg);
-                $this->setError($msg);
+                $this->setError("memcached server connect error!");
             }
             return $result;
         } else {
-            $msg = "No memcached extension found!";
-            $this->addDebug($msg);
-            $this->setError($msg);
+            $this->setError("No memcached extension found!");
             return false;
         }
     }
@@ -75,10 +69,18 @@ class PageViews
             $cas = null;
             $counter = 0;
             do {
-                $value = $this->memcached->get($this->pageviewsMemCKey, null, $cas);
-                if ($this->memcached->getResultCode() == \Memcached::RES_NOTFOUND) {
-                    $value = array($site => 1);
-                    $result = $this->memcached->add($this->pageviewsMemCKey, $value, $this->pageviewsCacheTime);
+                $value = $this->memcached->get(
+                    $this->pageviewsMemCKey,
+                    null,
+                    $cas
+                );
+                if ($this->memcached->getResultCode() === \Memcached::RES_NOTFOUND) {
+                    $value = [$site => 1];
+                    $result = $this->memcached->add(
+                        $this->pageviewsMemCKey,
+                        $value,
+                        $this->pageviewsCacheTime
+                    );
                     break;
                 } else {
                     if (!isset($value[$site])) {
@@ -86,22 +88,27 @@ class PageViews
                     } else {
                         $value[$site]++;
                     }
-                    $this->memcached->cas($cas, $this->pageviewsMemCKey, $value, $this->pageviewsCacheTime);
+                    $this->memcached->cas(
+                        $cas,
+                        $this->pageviewsMemCKey,
+                        $value,
+                        $this->pageviewsCacheTime
+                    );
                 }
                 $counter++;
                 if ($counter > 1000) {
                     break;
                 }
-            } while ($this->memcached->getResultCode() != \Memcached::RES_SUCCESS);
-            $result = (isset($result) && !!$result) || ($this->memcached->getResultCode() == \Memcached::RES_SUCCESS);
+            } while ($this->memcached->getResultCode() !== \Memcached::RES_SUCCESS);
+            $result = (isset($result) && !!$result)
+                || ($this->memcached->getResultCode() === \Memcached::RES_SUCCESS);
             if (!$result) {
                 $this->setError(
-                    "addPageView(): false result error! result code: "
+                    "addPageView(): result error! result code: "
                     . $this->memcached->getResultCode()
                     . " counter: " . $counter
                 );
             }
-            $this->addDebug("addPageView($site) success! stats: result = $result, counter = $counter, last cas: $cas");
             return $result;
         } else {
             $this->setError("addPageView($site): No memcached instance!");
@@ -112,22 +119,13 @@ class PageViews
     public function getPageViews($site = "")
     {
         $result = $this->memcached->get($this->pageviewsMemCKey);
-        ob_start();
-        var_dump($result);
-        $this->addDebug("getPageViews($site): result = " . ob_get_clean());
         if (!$result) {
-            $this->addDebug("getPageViews($site): result is false!");
-            $result = array();
-            if ($site) {
-                $this->addDebug("getPageViews($site): returning 0 page views");
-                return 0;
-            }
-        } elseif ($site) {
+            $result = [];
+        }
+        if ($site) {
             if (isset($result[$site])) {
-                $this->addDebug("getPageViews($site): returning {$result[$site]} page views");
                 return $result[$site];
             } else {
-                $this->addDebug("getPageViews($site): result[$site] not set! Returning 0 page views");
                 return 0;
             }
         }
@@ -137,7 +135,6 @@ class PageViews
     protected function setError($errorTxt = "")
     {
         $this->error = $errorTxt;
-        $this->addDebug("Error: $errorTxt");
     }
 
     public function getError()
@@ -149,43 +146,19 @@ class PageViews
         }
     }
 
-    protected function addDebug($message)
-    {
-        if ($this->allowDebug) {
-            $this->debugMessages[] = $message;
-            return true;
-        }
-        return false;
-    }
-
-    public function setDebug($allow = false)
-    {
-        $this->allowDebug = $allow;
-    }
-
-    public function getDebugMessages()
-    {
-        $result = empty($this->debugMessages) ? "none" : implode("<br/>\n", $this->debugMessages);
-        return $result;
-    }
-
-    protected function setConfig($config = array())
+    protected function setConfig($config = [])
     {
         if (isset($config) && !empty($config)) {
-            if (isset($config['memcachedHost'])) {
-                $this->memcachedHost = $config['memcachedHost'];
-            }
-            if (isset($config['memcachedPort'])) {
-                $this->memcachedPort = $config['memcachedPort'];
-            }
-            if (isset($config['pageviewsMemCKey'])) {
-                $this->pageviewsMemCKey = $config['pageviewsMemCKey'];
-            }
-            if (isset($config['pageviewsCacheTime'])) {
-                $this->pageviewsCacheTime = $config['pageviewsCacheTime'];
-            }
-            if (isset($config['allowDebug'])) {
-                $this->allowDebug = $config['allowDebug'];
+            foreach ([
+                'memcachedHost',
+                'memcachedPort',
+                'pageviewsMemCKey',
+                'pageviewsCacheTime'
+                ] as $prop
+            ) {
+                if (isset($config[$prop])) {
+                    $this->$prop = $config[$prop];
+                }                
             }
         }
     }
