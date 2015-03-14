@@ -20,6 +20,7 @@ class PageViews
             $result = $this->createMemcached();
             if (!$result) {
                 $this->setError("createMemcached() error!");
+
                 return false;
             }
         }
@@ -132,6 +133,7 @@ class PageViews
                 return 0;
             }
         }
+
         return $result;
     }
 
@@ -161,7 +163,7 @@ class PageViews
             ) {
                 if (isset($config[$prop])) {
                     $this->$prop = $config[$prop];
-                }                
+                }
             }
         }
     }

@@ -27,6 +27,7 @@ class PageViewsAdmin extends PageViews
             }
             $result = json_encode($tmp);
         }
+
         return $result;
     }
 
@@ -38,6 +39,7 @@ class PageViewsAdmin extends PageViews
             ob_start();
             $sites = &$this->sites;
             require_once __DIR__.'/../templates/view.phtml';
+
             return ob_get_clean();
         }
     }
