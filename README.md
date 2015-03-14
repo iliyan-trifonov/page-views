@@ -1,6 +1,8 @@
 # Page Views by Iliyan Trifonov
 [![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/iliyan-trifonov/page-views?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+[![StyleCI](https://styleci.io/repos/19856803/shield?style=flat)](https://styleci.io/repos/19856803)
+
 ### Quickly check your sites, visitors and search engines behaviour without slowing down your server or staying late at night!
 
 ## What is it?
