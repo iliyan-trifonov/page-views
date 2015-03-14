@@ -4,7 +4,6 @@ namespace ITrifonov;
 
 class PageViews
 {
-
     protected $memcached = null;
     protected $memcachedHost = '127.0.0.1';
     protected $memcachedPort = '11211';
@@ -24,7 +23,7 @@ class PageViews
                 return false;
             }
         }
-        $this->pageviewsMemCKey .= '::' . date('Ymd');
+        $this->pageviewsMemCKey .= '::'.date('Ymd');
         //$this->memcached->delete($this->pageviewsMemCKey); //cache cleanup
         return true;
     }
@@ -48,9 +47,11 @@ class PageViews
                 $this->memcached = null;
                 $this->setError("memcached server connect error!");
             }
+
             return $result;
         } else {
             $this->setError("No memcached extension found!");
+
             return false;
         }
     }
@@ -105,13 +106,15 @@ class PageViews
             if (!$result) {
                 $this->setError(
                     "addPageView(): result error! result code: "
-                    . $this->memcached->getResultCode()
-                    . " counter: " . $counter
+                    .$this->memcached->getResultCode()
+                    ." counter: ".$counter
                 );
             }
+
             return $result;
         } else {
             $this->setError("addPageView($site): No memcached instance!");
+
             return false;
         }
     }
@@ -153,7 +156,7 @@ class PageViews
                 'memcachedHost',
                 'memcachedPort',
                 'pageviewsMemCKey',
-                'pageviewsCacheTime'
+                'pageviewsCacheTime',
                 ] as $prop
             ) {
                 if (isset($config[$prop])) {

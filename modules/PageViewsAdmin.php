@@ -2,15 +2,14 @@
 
 namespace ITrifonov;
 
-require_once __DIR__ . '/PageViews.php';
+require_once __DIR__.'/PageViews.php';
 
 class PageViewsAdmin extends PageViews
 {
-
     protected $sites = null;
     protected $ajax = false;
 
-    public function __construct($config = array(), $ajax = false)
+    public function __construct($config = [], $ajax = false)
     {
         parent::__construct($config);
         $this->ajax = $ajax;
@@ -22,7 +21,7 @@ class PageViewsAdmin extends PageViews
         $result = parent::getPageViews();
         arsort($result);
         if ($json) {
-            $tmp = array();
+            $tmp = [];
             foreach ($result as $k => $v) {
                 $tmp[md5($k)] = $v;
             }
@@ -38,7 +37,7 @@ class PageViewsAdmin extends PageViews
         } else {
             ob_start();
             $sites = &$this->sites;
-            require_once __DIR__ . '/../templates/view.phtml';
+            require_once __DIR__.'/../templates/view.phtml';
             return ob_get_clean();
         }
     }
