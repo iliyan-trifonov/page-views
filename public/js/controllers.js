@@ -16,6 +16,8 @@
 
             $scope.seconds = interval;
 
+            $scope.sign = "+";
+
             Highcharts.setOptions({
                 global: {
                     useUTC: false

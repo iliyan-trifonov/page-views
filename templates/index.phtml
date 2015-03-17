@@ -3,7 +3,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <title>Page Views</title>
-    <link rel="stylesheet" href="/css/styles.css?v=1.0.1"/>
+    <link rel="stylesheet" href="/css/styles.css?v=1.2.1"/>
 </head>
 <body ng-app="PageViews">
 
@@ -15,10 +15,15 @@
                 <th class="wide">Latest</th>
                 <th>Average</th>
             </tr>
-            <tr ng-repeat="domain in domains | orderBy: '-pageviews'" ng-class="{'animate': domain.last > 0}">
+            <tr ng-repeat="domain in domains | orderBy: '-pageviews'"
+                ng-class="{'animate': domain.last > 0}"
+            >
                 <td class="left" ng-bind="domain.name"></td>
                 <td class="center" ng-bind="domain.pageviews | number"></td>
-                <td class="center" ng-bind="domain.last | number"></td>
+                <td class="center">
+                    <span ng-show="domain.last > 0" ng-bind="sign"></span>
+                    <span ng-bind="domain.last | number"></span>
+                </td>
                 <td class="center" ng-bind="domain.average | number"></td>
             </tr>
             <tr>
@@ -48,10 +53,10 @@
                 .value("series", series);
         })(angular);
     </script>
-    <script src="/js/app.js?v=1.0.1"></script>
-    <script src="/js/controllers.js?v=1.0.1"></script>
-    <script src="/js/services.js?v=1.0.1"></script>
-    <script src="/js/filters.js?v=1.0.1"></script>
+    <script src="/js/app.js?v=1.2.1"></script>
+    <script src="/js/controllers.js?v=1.2.1"></script>
+    <script src="/js/services.js?v=1.2.1"></script>
+    <script src="/js/filters.js?v=1.2.1"></script>
 
 </body>
 </html>
