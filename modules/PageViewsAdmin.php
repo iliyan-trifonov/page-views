@@ -19,13 +19,8 @@ class PageViewsAdmin extends PageViews
     public function getPageViews($json = false)
     {
         $result = parent::getPageViews();
-        arsort($result);
         if ($json) {
-            $tmp = [];
-            foreach ($result as $k => $v) {
-                $tmp[md5($k)] = $v;
-            }
-            $result = json_encode($tmp);
+            $result = json_encode($result);
         }
 
         return $result;
@@ -38,7 +33,7 @@ class PageViewsAdmin extends PageViews
         } else {
             ob_start();
             $sites = &$this->sites;
-            require_once __DIR__.'/../templates/view.phtml';
+            require_once __DIR__.'/../templates/index.phtml';
 
             return ob_get_clean();
         }

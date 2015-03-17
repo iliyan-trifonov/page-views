@@ -1,0 +1,57 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Page Views</title>
+    <link rel="stylesheet" href="/css/styles.css?v=1.0.1"/>
+</head>
+<body ng-app="PageViews">
+
+    <div ng-controller="IndexCtrl">
+        <table align="center">
+            <tr>
+                <th class="wide">Site</th>
+                <th class="wide">Page Views</th>
+                <th class="wide">Latest</th>
+                <th>Average</th>
+            </tr>
+            <tr ng-repeat="domain in domains | orderBy: '-pageviews'" ng-class="{'animate': domain.last > 0}">
+                <td class="left" ng-bind="domain.name"></td>
+                <td class="center" ng-bind="domain.pageviews | number"></td>
+                <td class="center" ng-bind="domain.last | number"></td>
+                <td class="center" ng-bind="domain.average | number"></td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+            </tr>
+            <tr>
+                <td colspan="3" class="center" id="status">
+                    Refresh in <span ng-bind="seconds"></span> seconds
+                </td>
+            </tr>
+        </table>
+
+        <div id="container" style="height: 400px"></div>
+    </div>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="//code.highcharts.com/4/highcharts.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <script type="text/javascript">
+        (function (angular) {
+            "use strict";
+            var series = [];
+<?php foreach ($sites as $site => $visits) : ?>
+            series.push({name: '<?= $site ?>', data: []});
+<?php endforeach ?>
+            angular.module("PageViews.vars", [])
+                .value("series", series);
+        })(angular);
+    </script>
+    <script src="/js/app.js?v=1.0.1"></script>
+    <script src="/js/controllers.js?v=1.0.1"></script>
+    <script src="/js/services.js?v=1.0.1"></script>
+    <script src="/js/filters.js?v=1.0.1"></script>
+
+</body>
+</html>

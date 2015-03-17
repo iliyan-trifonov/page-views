@@ -6,14 +6,29 @@ th {
     text-align: center;
 }
 
-.th {
+th.wide {
     width: 200px;
 }
 
-.td_left {
+td.left {
     text-align: left;
 }
 
-.td_center {
+td.center {
     text-align: center;
+}
+
+tr.animate {
+    font-weight: bold;
+    -webkit-animation: animate 2s;
+    animation: animate 2s;
+}
+
+@-webkit-keyframes animate {
+    50%   { background-color: yellow }
+    100% { background-color: inherit }
+}
+@keyframes animate {
+    50%   { background-color: yellow }
+    100% { background-color: inherit }
 }

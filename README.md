@@ -13,16 +13,20 @@ No difference between different types of visitors is made. It's just your site a
 Enough to make conclusions or just check if the site's working.
 
 ## Tech stuff
-This script uses PHP and Memcached to store the number of page views on the current domain using the HTTP_HOST variable
-as a key and only increasing the page views value. Memcached CAS() is used for atomicity.
+This script uses PHP and Memcached to store the number of page views on the current domain using the `HTTP_HOST` variable
+as a key and only increasing the page views value. Memcached CAS() is used for atomicity. For security you can provide 
+the domain name to the tracking script or the default `$_SERVER['HTTP_HOST']` will be used.
 No personal information is taken from the visitor at all, it's just your domain keeping how many times its pages are opened.
+The Admin Dashboard is built with AngularJS and CSS3 animations. Thanks to AngularJS things like automatic new domain
+inserting and ordering by page views is done very easy and without forcing you to refresh. 
+Thanks to Memcached there is no overhead for your sites.
 
 ## How to use it?
 You edit the config/config.php file, probably just changing the memcached server address if it's not running
 on the local host.
 Then include public/track.php in your own site's index.php and that's all about the tracking.
 Until the tracking is running you setup a new webserver configuration to point to this script's public dir and index.php
-as index page. An example Nginx configuration follows:
+as the default page. An example Nginx configuration follows:
 
     server {
             server_name pageviews.your-server.com;
@@ -45,14 +49,14 @@ as index page. An example Nginx configuration follows:
 Reload the web server's configuration and go to http(s)://pageviews.your-server.com where the public/index.php file
 will be loaded and you will be presented with a similar page:
 
-![Page Views Preview](http://www.iliyan-trifonov.com/pageviews/PageViews_ITrifonov.jpg)
+![Page Views Preview](example.jpg)
 
 The main Memcached key is connected to the current day and cached for 24h so when your server passes 00:00h
 a new key will be used keeping the old one for a day to be used later if needed.
 All domains are put in a single array and single memcached key is used so there is a need for atomicity and so the cas()
 is used.
 
-The page refreshes its contents every 60 seconds (configurable in defaults.js) by using jQuery's ajax call and receives
+The page refreshes its contents every 60 seconds (configurable in app.js) by using Angular's $http call and receives
 a JSON array. It calculates the difference between the old and new values, an average and stores a historical data
 using the amazing Highcharts.js
 
