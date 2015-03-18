@@ -10,31 +10,32 @@ echo "(" . date("Y-m-d H:i:s") . ") Starting..\n";
 
 $pageViews = new \ITrifonov\PageViews\Modules\PageViews($pageViewsConfig);
 
-$pageViews->setDate(date("Ymd", strtotime("-1 DAY")));
+$yesterday = date("Ymd", strtotime("-1 DAY"));
+echo "yesterday is: $yesterday\n";
+
+$pageViews->setDate($yesterday);
 
 $domains = $pageViews->getPageViews();
 
 arsort($domains);
 
-$domains = array_map(
-    function ($a) {
-        return number_format($a);
-    },
-    $domains
-);
+$body = "All domains:<br/><div style=\"font-size: 14px;\">";
+if (!$domains || empty($domains)) {
+    $body .= "None";
+} else {
+    foreach ($domains as $domain => $pViews) {
+        $body .= "<span>$domain -> ".number_format($pViews)."</span><br/>\n";
+    }
+}
+$body .= "</div>";
 
-ob_start();
-echo "<div style=\"font-size: 14px;\">\n<pre>"
-        . print_r($domains, true)
-        . "</pre>\n</div>\n";
-$buffer = ob_get_clean();
-echo "email to be sent\n" . $buffer;
+echo "email to be sent:\n\033[1;34m$body\033[0m\n";
 
-echo "Sending admin email..\n";
+echo "Sending email..\n";
 $emailRes = mail(
-    "your.email@host.com",
-    "Page Views Stats for " . date("Y-m-d"),
-    "All domains:\n$buffer"
+    "your.email@example.com",
+    "Page Views Stats for $yesterday",
+    "$body"
 );
 echo "Email " . ($emailRes ? " " : "\033[1;31mNOT\033[0m ") . "sent successfully!\n";
 
