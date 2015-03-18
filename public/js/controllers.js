@@ -90,7 +90,7 @@
                             } else if (!$filter('getByDomainName')(series, domain)) {
                                 chart.addSeries({
                                     "name": domain,
-                                    "data": [pageviews]
+                                    "data": []
                                 });
                             }
                             domains.push({

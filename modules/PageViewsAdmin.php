@@ -1,19 +1,17 @@
 <?php
 
-namespace ITrifonov;
-
-require_once __DIR__.'/PageViews.php';
+namespace ITrifonov\PageViews\Modules;
 
 class PageViewsAdmin extends PageViews
 {
-    protected $sites = null;
+    protected $domains = null;
     protected $ajax = false;
 
     public function __construct($config = [], $ajax = false)
     {
         parent::__construct($config);
         $this->ajax = $ajax;
-        $this->sites = $this->getPageViews($ajax);
+        $this->domains = $this->getPageViews($ajax);
     }
 
     public function getPageViews($json = false)
@@ -29,10 +27,10 @@ class PageViewsAdmin extends PageViews
     public function output()
     {
         if ($this->ajax) {
-            return $this->sites;
+            return $this->domains;
         } else {
             ob_start();
-            $sites = &$this->sites;
+            $domains = &$this->domains;
             require_once __DIR__.'/../templates/index.phtml';
 
             return ob_get_clean();
