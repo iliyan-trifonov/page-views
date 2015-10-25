@@ -1,23 +1,25 @@
 <?php
 
-namespace ITrifonov\PageViews\Modules;
+namespace ITrifonov\PageViews\modules;
 
 class PageViews
 {
     protected $adapter = null;
     protected $adapters = [
-        "memcached" => "MemcachedAdapter",
-        "redis" => "RedisAdapter"
+        'memcached' => 'MemcachedAdapter',
+        'redis'     => 'RedisAdapter',
     ];
-    protected $error = "";
+    protected $error = '';
 
     public function __construct($config = [], $server = null)
     {
         $factory = new AdapterFactory();
         if (!$this->adapter = $factory->get($config, $server)) {
-            $this->setError("Could not create adapter!");
+            $this->setError('Could not create adapter!');
+
             return false;
         }
+
         return true;
     }
 
@@ -26,7 +28,7 @@ class PageViews
         return $_SERVER['HTTP_HOST'];
     }
 
-    public function addPageView($domain = "")
+    public function addPageView($domain = '')
     {
         if ($this->error) {
             return false;
@@ -37,16 +39,18 @@ class PageViews
         try {
             $result = $this->adapter->incr($domain);
         } catch (\Exception $exc) {
-            $this->setError("incr() exception: " . $exc->getMessage());
+            $this->setError('incr() exception: '.$exc->getMessage());
+
             return false;
         }
         if (!$result) {
-            $this->setError("incr() returned false! Check your config!");
+            $this->setError('incr() returned false! Check your config!');
         }
+
         return $result;
     }
 
-    public function getPageViews($domain = "")
+    public function getPageViews($domain = '')
     {
         $result = $this->adapter->get();
         if (!$result) {
@@ -71,7 +75,7 @@ class PageViews
         }
     }
 
-    protected function setError($errorTxt = "")
+    protected function setError($errorTxt = '')
     {
         $this->error = $errorTxt;
     }

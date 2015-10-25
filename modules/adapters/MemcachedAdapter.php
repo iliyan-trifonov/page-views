@@ -1,15 +1,15 @@
 <?php
 
-namespace ITrifonov\PageViews\Modules\Adapters;
+namespace ITrifonov\PageViews\modules\adapters;
 
 use ITrifonov\PageViews\Modules\AdapterInterface;
 
 class MemcachedAdapter extends BaseAdapter implements AdapterInterface
 {
-    protected $extensionName = "memcached";
-    protected $extensionClass = "\\Memcached";
-    protected $host = "127.0.0.1";
-    protected $port = "11211";
+    protected $extensionName = 'memcached';
+    protected $extensionClass = '\\Memcached';
+    protected $host = '127.0.0.1';
+    protected $port = '11211';
 
     public function init()
     {
@@ -23,7 +23,7 @@ class MemcachedAdapter extends BaseAdapter implements AdapterInterface
             if (!$result
                 || !isset(
                     $statuses[
-                    $this->host.":".$this->port
+                    $this->host.':'.$this->port
                     ]
                 )
             ) {
@@ -38,7 +38,7 @@ class MemcachedAdapter extends BaseAdapter implements AdapterInterface
         }
     }
 
-    public function incr($domain = "")
+    public function incr($domain = '')
     {
         if (!$domain) {
             return false;

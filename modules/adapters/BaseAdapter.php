@@ -1,18 +1,18 @@
 <?php
 
-namespace ITrifonov\PageViews\Modules\Adapters;
+namespace ITrifonov\PageViews\modules\adapters;
 
 class BaseAdapter
 {
     protected $server = null;
-    protected $host = "";
-    protected $port = "";
-    protected $keyprefix = "";
-    protected $key = "";
+    protected $host = '';
+    protected $port = '';
+    protected $keyprefix = '';
+    protected $key = '';
     protected $time = 86400; //24h
 
-    protected $extensionName = "";
-    protected $extensionClass = "";
+    protected $extensionName = '';
+    protected $extensionClass = '';
     protected $propNamesAllowed = [
         'host',
         'port',
@@ -24,14 +24,16 @@ class BaseAdapter
     {
         if ($server && $server instanceof $this->extenstionClass) {
             $this->server = $server;
+
             return true;
         }
+
         return false;
     }
 
     public function setDate($date)
     {
-        $this->key = $this->keyprefix."--".$date;
+        $this->key = $this->keyprefix.'--'.$date;
     }
 
     public function setConfig($config = [])
@@ -43,7 +45,7 @@ class BaseAdapter
                 }
             }
         }
-        $this->key = $this->keyprefix."--".date("Ymd");
+        $this->key = $this->keyprefix.'--'.date('Ymd');
     }
 
     public function get()

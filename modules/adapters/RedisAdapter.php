@@ -1,15 +1,15 @@
 <?php
 
-namespace ITrifonov\PageViews\Modules\Adapters;
+namespace ITrifonov\PageViews\modules\adapters;
 
 use ITrifonov\PageViews\Modules\AdapterInterface;
 
 class RedisAdapter extends BaseAdapter implements AdapterInterface
 {
-    protected $extensionName = "redis";
-    protected $extensionClass = "\\Redis";
-    protected $host = "127.0.0.1";
-    protected $port = "6379";
+    protected $extensionName = 'redis';
+    protected $extensionClass = '\\Redis';
+    protected $host = '127.0.0.1';
+    protected $port = '6379';
 
     public function init()
     {
