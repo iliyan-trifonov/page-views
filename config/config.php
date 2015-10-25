@@ -1,19 +1,19 @@
 <?php
 
 $pageViewsConfig = [
-    "default" => "redis",
-    "servers" => [
-        "memcached" => [
-            'host'      => '127.0.0.1',
-            'port'      => '11211',
+    'default' => 'redis',
+    'servers' => [
+        'memcached' => [
+            'host'        => '127.0.0.1',
+            'port'        => '11211',
             'keyprefix'   => 'pageviews_stats',
-            'time' => 86400, //24h
+            'time'        => 86400, //24h
         ],
-        "redis" => [
+        'redis' => [
             'host'      => '127.0.0.1',
             'port'      => '6379',
-            'hash'   => 'pageviews_stats',
-            'time' => 86400, //24h
-        ]
-    ]
+            'hash'      => 'pageviews_stats',
+            'time'      => 86400, //24h
+        ],
+    ],
 ];

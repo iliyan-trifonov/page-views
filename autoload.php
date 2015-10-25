@@ -5,7 +5,7 @@ spl_autoload_register(function ($class) {
 
     $prefix = 'ITrifonov\\PageViews\\';
 
-    $baseDir = __DIR__ . '/';
+    $baseDir = __DIR__.'/';
 
     //not from our project namespace
     $len = strlen($prefix);
@@ -15,9 +15,9 @@ spl_autoload_register(function ($class) {
 
     $relativeClass = substr($class, $len);
 
-    $file = $baseDir . str_replace('\\', '/', $relativeClass) . '.php';
+    $file = $baseDir.str_replace('\\', '/', $relativeClass).'.php';
 
-    $file = str_replace(["/Modules/", "/Adapters/"], ["/modules/", "/adapters/"], $file);
+    $file = str_replace(['/Modules/', '/Adapters/'], ['/modules/', '/adapters/'], $file);
 
     if (file_exists($file)) {
         require $file;

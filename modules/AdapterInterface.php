@@ -1,6 +1,6 @@
 <?php
 
-namespace ITrifonov\PageViews\Modules;
+namespace ITrifonov\PageViews\modules;
 
 interface AdapterInterface
 {

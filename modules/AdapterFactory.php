@@ -1,36 +1,36 @@
 <?php
 
-namespace ITrifonov\PageViews\Modules;
+namespace ITrifonov\PageViews\modules;
 
 class AdapterFactory
 {
     protected $adapters = [
-        "memcached" => "MemcachedAdapter",
-        "redis" => "RedisAdapter"
+        'memcached' => 'MemcachedAdapter',
+        'redis'     => 'RedisAdapter',
     ];
 
     public function get($config, $server)
     {
-        if (!$config || !isset($config["default"])) {
-            return null;
+        if (!$config || !isset($config['default'])) {
+            return;
         }
 
-        $name = $config["default"];
+        $name = $config['default'];
 
         if (!isset($this->adapters[$name])) {
-            return null;
+            return;
         }
 
-        $class = "\\ITrifonov\\PageViews\\Modules\\Adapters\\" . $this->adapters[$name];
+        $class = '\\ITrifonov\\PageViews\\Modules\\Adapters\\'.$this->adapters[$name];
 
         if (!class_exists($class)) {
-            return null;
+            return;
         }
 
         $adapter = new $class();
 
         if ($config) {
-            $adapter->setConfig($config["servers"][$name]);
+            $adapter->setConfig($config['servers'][$name]);
         }
 
         if ($server) {
